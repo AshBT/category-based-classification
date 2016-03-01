@@ -58,16 +58,10 @@ def review_to_sentences( review, tokenizer, remove_stopwords=False ):
     # so this returns a list of lists
     return sentences
 
-def trainWord2Vec(dimensionality, context_window, corpus = "allSentences3M"):
+def trainWord2Vec(dimensionality, context_window, corpus):
     # train word2vec model
-    # if corpus is not the default value, a valid list of sentences should be given as input to the word2vec algorithm
     #
-    #
-    if corpus == "allSentences3M":
-        # load corpus
-        allSentences= pickle.load( open( "allSentences3M.p", "rb" ) )
-    else:
-        allSentences = corpus
+    allSentences= pickle.load( open( corpus, "rb" ) )
     # calculate and return model
     model = Word2Vec(allSentences, size=dimensionality, window=context_window, min_count=1, workers=4)
     return model
@@ -271,17 +265,24 @@ def calculate_weights(conf_w2v,conf_ngrams,freqs):
 # start timer
 program_start = time.time()
 
-# load documents, two formats: 1) word2vec format, each document is a list of sentences 2) n-gram format, full text per document with numbers removed
-# go to the corresponding function ( create_docs_and_labels_variables ) to look how these files are created
+if(len(sys.argv) == 3):
+	# Pickle file where a list of sentences variable is stored to train the word2vec model. Each sentence is a list of words, so a list of lists must be provided.
+    corpusFile = sys.argv[1]
+	# Directory of dataset (relative path example: "SIMMO/")
+    datasetDirectory = sys.argv[2]
+else:
+	print("You must provide exactly two arguments: First is the corpus pickle file and second is the dataset directory.")
+	print("Exiting...")
+	exit()
+
+# parse documents into two formats: 1) word2vec format, each document is a list of sentences 2) n-gram format, full text per document with numbers removed
 print("Loading documents and labels...")
-allDocuments_w2v = pickle.load(open( "files/allDocuments_w2v.p", "rb" ))
-allDocuments_ngrams = pickle.load(open( "files/allDocuments_numrem.p", "rb" ))   
-labels = pickle.load( open( "files/labels.p", "rb" ) ) 
+allDocuments_w2v, allDocuments_ngrams, labels = create_docs_and_labels_variables(datasetDirectory)
 
  
 # balanced random split to dataset and labels
 print("Generating stratified random split..")
-sss = StratifiedShuffleSplit(labels, 1, test_size=0.3, random_state=7)
+sss = StratifiedShuffleSplit(labels, 1, test_size=0.3)
 for train_index, test_index in sss:
     print("TRAIN indices:", train_index, "TEST indices:", test_index)
     X_train_w2v, X_test_w2v = allDocuments_w2v[train_index], allDocuments_w2v[test_index]
@@ -295,9 +296,7 @@ print()
 print("WORD2VEC")
 
 # extract w2v probabilities on training and test set
-# this code uses pre-loaded w2v model, you can train it from scratch using trainWord2Vec() function
-word2vecModelName = "files/model_12_200.out"
-word2vecModel = Word2Vec.load(word2vecModelName)
+word2vecModel = trainWord2Vec(200, 12, corpusFile)
 print("\nCalculating training set w2v vectors...")
 w2v_train = getAvgFeatureVecs(X_train_w2v, word2vecModel, 200)
 print("Calculating test set w2v vectors...")
