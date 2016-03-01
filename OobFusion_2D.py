@@ -20,21 +20,18 @@ def review_to_wordlist( review, remove_stopwords=False ):
     # Function to convert a document to a sequence of words,
     # optionally removing stop words.  Returns a list of words.
     #
-    # 1. Remove HTML
-#     review_text = BeautifulSoup(review).get_text()
-    #  
-    # 2. Remove non-letters
+    # 1. Remove non-letters
     review_text = re.sub("[^a-zA-Z]"," ", review)
     #
-    # 3. Convert words to lower case and split them
+    # 2. Convert words to lower case and split them
     words = review_text.lower().split()
     #
-    # 4. Optionally remove stop words (false by default)
+    # 3. Optionally remove stop words (false by default)
     if remove_stopwords:
         stops = set(stopwords.words("english"))
         words = [w for w in words if not w in stops]
     #
-    # 5. Return a list of words
+    # 4. Return a list of words
     return(words)
 
 # Define a function to split a review into parsed sentences
@@ -462,7 +459,7 @@ print("\nTest set confusion matrix:")
 print(confusion_matrix_ngrams_test)
 
 
-# AVERAGE PROBABILITIES OF W2V AND N-GRAM MODELS TO GET FINAL PREDICTIONS
+# AGGREGATE PROBABILITIES OF W2V AND N-GRAM MODELS TO GET FINAL PREDICTIONS
 print()
 print("Fusing probabilities...")
 print()
@@ -475,12 +472,10 @@ ngram_weights = [1-w for w in w2v_weights]
 probabilities_final = list()
 for idx, w2v_doc in enumerate(probabilities_w2v):
     ngram_doc = probabilities_ngrams[idx]
-#     print(ngram_doc)
     final_doc = list()
     for idx2, w2v_val in enumerate(w2v_doc):
         ngram_val = ngram_doc[idx2]
         final_val = w2v_val * w2v_weights[idx2] + ngram_val * ngram_weights[idx2]
-#         print(final_val)
         final_doc.append(final_val)
     probabilities_final.append(final_doc)
  
