@@ -210,7 +210,6 @@ def readstopwords(file):
     fin = open(file,"r")
     for line in fin:
         stopwords.append(PorterStemmer().stem_word(line.strip()))
-#         stopwords.append(line.strip())
     return stopwords
 
 def calculate_metrics(conf_matrix):
@@ -266,14 +265,14 @@ def calculate_weights(conf_w2v,conf_ngrams,freqs):
 program_start = time.time()
 
 if(len(sys.argv) == 3):
-	# Pickle file where a list of sentences variable is stored to train the word2vec model. Each sentence is a list of words, so a list of lists must be provided.
+    # Pickle file where a list of sentences variable is stored to train the word2vec model. Each sentence is a list of words, so a list of lists must be provided.
     corpusFile = sys.argv[1]
-	# Directory of dataset (relative path example: "SIMMO/")
+    # Directory of dataset (relative path example: "SIMMO/")
     datasetDirectory = sys.argv[2]
 else:
-	print("You must provide exactly two arguments: First is the corpus pickle file and second is the dataset directory.")
-	print("Exiting...")
-	exit()
+    print("You must provide exactly two arguments: First is the corpus pickle file and second is the dataset directory.")
+    print("Exiting...")
+    exit()
 
 # parse documents into two formats: 1) word2vec format, each document is a list of sentences 2) n-gram format, full text per document with numbers removed
 print("Loading documents and labels...")
