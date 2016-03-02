@@ -176,17 +176,17 @@ def create_docs_and_labels_variables(datasetDir = "SIMMO/"):
     labels=[0 for x in range(science)]
     for count in range(science):
         if count<economy:
-            labels[count] = "economy"
+            labels[count] = "Economy, Business & Finance"
         elif count<health:
-            labels[count] = "health"
+            labels[count] = "Health"
         elif count<lifestyle:
-            labels[count] = "lifestyle"
+            labels[count] = "Lifestyle & Leisure"
         elif count<nature:
-            labels[count] = "nature"
+            labels[count] = "Nature & Environment"
         elif count<politics:
-            labels[count] = "politics"
+            labels[count] = "Politics"
         elif count<science:
-            labels[count] = "science"
+            labels[count] = "Science & Technology"
     
     return allDocuments_w2v, allDocuments_ngrams, labels
 
@@ -322,7 +322,7 @@ for item in oob_probabilities_w2v:
     oob_predictions_w2v.append(predicted)
     
 # extract confusion matrix
-confusion_matrix_oob_w2v = confusion_matrix(y_train, oob_predictions_w2v, labels=["economy", "health", "lifestyle", "nature", "politics", "science"])
+confusion_matrix_oob_w2v = confusion_matrix(y_train, oob_predictions_w2v, labels=["Economy, Business & Finance", "Health", "Lifestyle & Leisure", "Nature & Environment", "Politics", "Science & Technology"])
 print("\nOut-of-the-bag confusion matrix:")
 print(confusion_matrix_oob_w2v)
 
@@ -337,7 +337,7 @@ for cl in classes_w2v:
 # get model probabilities, predictions and confusion matrix on test_set
 probabilities_w2v = forest_w2v.predict_proba(w2v_test)
 predictions_w2v = forest_w2v.predict(w2v_test)
-confusion_matrix_w2v_test = confusion_matrix(y_test, predictions_w2v, labels=["economy", "health", "lifestyle", "nature", "politics", "science"])
+confusion_matrix_w2v_test = confusion_matrix(y_test, predictions_w2v, labels=["Economy, Business & Finance", "Health", "Lifestyle & Leisure", "Nature & Environment", "Politics", "Science & Technology"])
 print("\nTest set confusion matrix:")
 print(confusion_matrix_w2v_test)
 
@@ -446,7 +446,7 @@ for item in oob_probabilities_ngrams:
     oob_predictions_ngrams.append(predicted)
     
 # extract confusion matrix
-confusion_matrix_oob_ngrams = confusion_matrix(y_train, oob_predictions_ngrams, labels=["economy", "health", "lifestyle", "nature", "politics", "science"])
+confusion_matrix_oob_ngrams = confusion_matrix(y_train, oob_predictions_ngrams, labels=["Economy, Business & Finance", "Health", "Lifestyle & Leisure", "Nature & Environment", "Politics", "Science & Technology"])
 print("\nOut-of-the-bag confusion matrix:")
 print(confusion_matrix_oob_ngrams)
 
@@ -454,7 +454,7 @@ print(confusion_matrix_oob_ngrams)
 # calculate test set predictions and confusion matrix
 probabilities_ngrams = forest_ngrams.predict_proba(tf_total_test)
 predictions_ngrams = forest_ngrams.predict(tf_total_test)
-confusion_matrix_ngrams_test = confusion_matrix(y_test, predictions_ngrams, labels=["economy", "health", "lifestyle", "nature", "politics", "science"])
+confusion_matrix_ngrams_test = confusion_matrix(y_test, predictions_ngrams, labels=["Economy, Business & Finance", "Health", "Lifestyle & Leisure", "Nature & Environment", "Politics", "Science & Technology"])
 print("\nTest set confusion matrix:")
 print(confusion_matrix_ngrams_test)
 
@@ -484,7 +484,7 @@ print("\nFused test set probabilities matrix:")
 print(probabilities_final)
 
 # get final fused predictions
-classes = ["economy", "health", "lifestyle", "nature", "politics", "science"]
+classes = ["Economy, Business & Finance", "Health", "Lifestyle & Leisure", "Nature & Environment", "Politics", "Science & Technology"]
 final_predictions = list()
 for item in probabilities_final:
     # get index of max probability
@@ -495,7 +495,7 @@ for item in probabilities_final:
     final_predictions.append(predicted)
 
 # output final fused confusion matrix
-confusion_matrix_final = confusion_matrix(y_test, final_predictions, labels=["economy", "health", "lifestyle", "nature", "politics", "science"])
+confusion_matrix_final = confusion_matrix(y_test, final_predictions, labels=["Economy, Business & Finance", "Health", "Lifestyle & Leisure", "Nature & Environment", "Politics", "Science & Technology"])
 print("\nFused test set confusion matrix:")
 print(confusion_matrix_final)
 
